@@ -1,0 +1,6 @@
+{
+  "name": "LabShare",
+  "description": "A platform where departments list research equipment, and researchers request, get approval, schedule usage, and log activity.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
