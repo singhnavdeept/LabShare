@@ -1,1 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: #0f172a;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%238b5cf6' fill='none' opacity='0.08' stroke-width='1'%3E%3Ccircle cx='100' cy='100' r='80'/%3E%3Ccircle cx='100' cy='100' r='60'/%3E%3Ccircle cx='100' cy='100' r='40'/%3E%3Cpath d='M100 20 Q130 60 100 100 Q70 60 100 20'/%3E%3Cpath d='M100 180 Q130 140 100 100 Q70 140 100 180'/%3E%3Cpath d='M20 100 Q60 130 100 100 Q60 70 20 100'/%3E%3Cpath d='M180 100 Q140 130 100 100 Q140 70 180 100'/%3E%3Cpath d='M43 43 Q80 70 100 100 Q70 80 43 43'/%3E%3Cpath d='M157 157 Q120 130 100 100 Q130 120 157 157'/%3E%3Cpath d='M157 43 Q120 70 100 100 Q130 80 157 43'/%3E%3Cpath d='M43 157 Q80 130 100 100 Q70 120 43 157'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  color: #f8fafc;
+}

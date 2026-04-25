@@ -23,7 +23,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-50 min-h-[calc(100vh-64px)]">
+      <div className="min-h-[calc(100vh-64px)]">
         {children}
       </div>
     </>
