@@ -112,6 +112,15 @@ export const updateRequestStatus = async (req: AuthRequest, res: Response) => {
       await log.save();
     }
 
+    const io = req.app.get('io');
+    if (io) {
+      io.to(r.userId.toString()).emit('notification', {
+        title: `Request ${status === 'approved' ? 'Approved' : 'Rejected'}`,
+        message: `Your request for ${eq.name} has been ${status}.`,
+        type: status === 'approved' ? 'success' : 'error'
+      });
+    }
+
     res.json(r);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });

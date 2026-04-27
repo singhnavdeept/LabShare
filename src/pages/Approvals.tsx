@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { format } from 'date-fns';
 import { Check, X, CalendarDays, Inbox } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Approvals() {
   const queryClient = useQueryClient();
@@ -18,10 +19,16 @@ export default function Approvals() {
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       await api.put(`/requests/${id}/status`, { status });
+      return status;
     },
-    onSuccess: () => {
+    onSuccess: (status) => {
       queryClient.invalidateQueries({ queryKey: ['requests'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-overview'] });
+      if (status === 'approved') {
+        toast.success('Request approved successfully');
+      } else {
+        toast.info('Request rejected');
+      }
     }
   });
 

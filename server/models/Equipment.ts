@@ -13,6 +13,7 @@ const equipmentSchema = new mongoose.Schema(
     bookingType: { type: String, enum: ['exclusive', 'multiple'], default: 'exclusive' },
     location: { type: String, default: '' },
     condition: { type: String, enum: ['Good', 'Maintenance', 'Limited'], default: 'Good' },
+    imageUrl: { type: String, default: '' },
   },
   { timestamps: true }
 );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '../services/api';
+import { toast } from 'sonner';
 
 export default function RequestForm() {
   const { id } = useParams();
@@ -22,6 +23,7 @@ export default function RequestForm() {
       await api.post('/requests', { ...data, equipmentId: id });
     },
     onSuccess: () => {
+      toast.success('Request submitted successfully');
       navigate('/bookings');
     },
     onError: (err: any) => {
@@ -41,6 +43,11 @@ export default function RequestForm() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <div className="bg-slate-800/80 backdrop-blur-xl shadow-2xl rounded-3xl border border-slate-700/50 overflow-hidden">
+        {equipment.imageUrl && (
+          <div className="w-full h-48 bg-slate-900 border-b border-violet-500/20">
+             <img src={equipment.imageUrl} alt={equipment.name} className="w-full h-full object-cover opacity-80" />
+          </div>
+        )}
         <div className="bg-violet-600/20 border-b border-violet-500/20 backdrop-blur-md px-8 py-10 sm:p-12 text-white">
           <h3 className="text-3xl font-bold tracking-tight">
             Request {equipment.name}

@@ -3,11 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { format } from 'date-fns';
-import { Check, X, Clock, CalendarDays, Activity, Box, Search, PlayCircle } from 'lucide-react';
+import { Check, X, Clock, CalendarDays, Activity, Box, Search, PlayCircle, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const isManagerOrAdmin = user?.role === 'manager' || user?.role === 'admin';
 
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard-overview'],
@@ -17,9 +19,37 @@ export default function Dashboard() {
     }
   });
 
-  if (isLoading) return <div className="p-8 text-center text-gray-500">Loading dashboard...</div>;
+  if (isLoading) return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-pulse">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <div className="h-8 bg-slate-800 rounded w-64 mb-2"></div>
+          <div className="h-4 bg-slate-800 rounded w-48"></div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="bg-slate-800/80 p-6 rounded-3xl h-32 border border-slate-700/50"></div>
+        ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="col-span-2 space-y-6">
+          <div className="h-8 bg-slate-800 rounded w-48 mb-6"></div>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-24 bg-slate-800/80 rounded-3xl border border-slate-700/50"></div>
+          ))}
+        </div>
+        <div className="col-span-1 space-y-6">
+          <div className="h-8 bg-slate-800 rounded w-48 mb-6"></div>
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-20 bg-slate-800/80 rounded-2xl border border-slate-700/50"></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
-  const { stats, recentActivity, upcomingBookings } = data || {};
+  const { stats, recentActivity, upcomingBookings, usageAnalytics } = data || {};
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -60,7 +90,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {user?.role === 'manager' || user?.role === 'admin' ? (
+        {isManagerOrAdmin ? (
           <Link to="/approvals" className="bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl shadow-sm border border-slate-700/50 hover:shadow-violet-900/20 transition-all cursor-pointer block hover:scale-[1.02] hover:border-violet-500/30">
             <div className="flex items-center">
               <div className="p-4 bg-amber-500/20 rounded-2xl shadow-inner border border-amber-500/20">
@@ -86,6 +116,32 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {isManagerOrAdmin && usageAnalytics && usageAnalytics.length > 0 && (
+        <div className="mb-8 bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl shadow-sm border border-slate-700/50">
+          <h2 className="text-lg font-semibold text-white mb-6 flex items-center">
+             <BarChart2 className="w-5 h-5 mr-2 text-violet-400" />
+             Equipment Usage Trends
+          </h2>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={usageAnalytics} margin={{ top: 10, right: 30, left: -20, bottom: 0 }}>
+                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  cursor={{ fill: '#334155', opacity: 0.4 }}
+                  contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px', color: '#f8fafc' }}
+                />
+                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                  {usageAnalytics.map((entry: any, index: number) => (
+                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#8b5cf6' : '#c084fc'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         

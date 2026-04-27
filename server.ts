@@ -1,5 +1,7 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import path from 'path';
 import dotenv from 'dotenv';
 import { connectDB } from './server/config/db.js';
@@ -12,7 +14,21 @@ dotenv.config();
 
 async function startServer() {
   const app = express();
+  const httpServer = createServer(app);
+  const io = new Server(httpServer, {
+    cors: { origin: '*' }
+  });
+
   const PORT = 3000;
+
+  // Make io accessible globally or pass to routes
+  app.set('io', io);
+
+  io.on('connection', (socket) => {
+    socket.on('join', (userId) => {
+      socket.join(userId);
+    });
+  });
 
   // Middleware
   app.use(express.json());
@@ -45,7 +61,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }
